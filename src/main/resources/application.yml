@@ -1,0 +1,97 @@
+server:
+  port: 8081
+
+swagger:
+  basic:
+    enable: false
+    username: admin
+    password: Cmcc@123456!@#$%^
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+mybatis:
+  configuration:
+    call-setters-on-nulls: true
+  type-handlers-package: com.bsi.opera.webApi.handler
+  mapper-locations: classpath:mapping/*/*Mapper.xml
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 150MB
+  application:
+    name: opera
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.100.221:3306/highway?serverTimezone=UTC&characterEncoding=utf8&useSSL=true&allowMultiQueries=true
+    username: root
+    password: "@51bsi.com"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 1
+    minIdle: 3
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,slf4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    useGlobalDataSourceStat: true
+  redis:
+     host: 192.168.100.221
+     password:
+     port: 6379
+     database: 1
+     pool:
+       max-active: 8
+       max-wait: -1
+       max-idle: 8
+       min-idle: 0
+logging:
+  config: classpath:log4j2.xml
+dynamic:
+  datasource:
+    #设置要动态切换的数据库，一定要是下边数据源中的pool-name的值
+    names: slaveTest
+    #设置用来切换数据库的传入值，作为TargetDataSource的value，默认是slave
+    flag: slave
+    #设置默认的DB，名字要跟下面的一个pool-name一致，默认是master
+  default-db: master
+  hikari:
+    - master:
+      jdbc-url: jdbc:mysql://192.168.10.4:3306/mas_oper?characterEncoding=utf8&useSSL=true&allowMultiQueries=true&rewriteBatchedStatements=true
+      username: root
+      password: "Cmcc@1234!"
+      pool-name: master
+    - slaveTest:
+      jdbc-url: jdbc:mysql://192.168.10.4:3306/mas_oper?characterEncoding=utf8&useSSL=true&allowMultiQueries=true&rewriteBatchedStatements=true
+      username: root
+      password: "Cmcc@1234!"
+      pool-name: slaveTest
+socketio:
+  #到时候需要改成服务器地址
+  #host: 192.168.100.221
+  host: 127.0.0.1
+  port: 9998
+  # 设置最大每帧处理数据的长度，防止他人利用大数据来攻击服务器
+  maxFramePayloadLength: 1048576
+  # 设置http交互最大内容长度
+  maxHttpContentLength: 1048576
+  # socket连接数大小（如只监听一个端口boss线程组为1即可）
+  bossCount: 1
+  workCount: 100
+  allowCustomRequests: true
+  # 协议升级超时时间（毫秒），默认10秒。HTTP握手升级为ws协议超时时间
+  upgradeTimeout: 1000000
+  # Ping消息超时时间（毫秒），默认60秒，这个时间间隔内没有接收到心跳消息就会发送超时事件
+  pingTimeout: 6000000
+  # Ping消息间隔（毫秒），默认25秒。客户端向服务器发送一条心跳消息间隔
+  pingInterval: 25000
+
